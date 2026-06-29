@@ -12,7 +12,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
 from app.db.init_db import init_db
-from app.v1.router import api_router
+from app.api.v1.router import api_router
 
 
 @asynccontextmanager
@@ -44,3 +44,9 @@ app.include_router(api_router, prefix=settings.API_V1_PREFIX)
 @app.get("/", tags=["health"])
 def root() -> dict:
     return {"status": "ok", "service": settings.PROJECT_NAME, "docs": "/docs"}
+
+
+# Serve local media files if local storage backend is configured
+if settings.STORAGE_BACKEND == "local":
+    os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
+    app.mount("/media", StaticFiles(directory=settings.MEDIA_ROOT), name="media")

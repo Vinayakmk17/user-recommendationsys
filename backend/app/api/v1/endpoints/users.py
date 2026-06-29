@@ -9,13 +9,13 @@ from app.crud import user as crud_user
 from app.models.user import User
 from app.schemas.token import TokenWithUser
 from app.schemas.user import UserCreate, UserOut, UserProfile, UserUpdate
-from app.v1.deps import get_current_user, get_db
+from app.api import deps
 
 router = APIRouter()
 
 
 @router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
-def register(user_in: UserCreate, db: Session = Depends(get_db)):
+def register(user_in: UserCreate, db: Session = Depends(deps.get_db)):
     if crud_user.get_by_username(db, username=user_in.username):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -31,7 +31,7 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
 
 @router.post("/login", response_model=TokenWithUser)
 def login(
-    db: Session = Depends(get_db),
+    db: Session = Depends(deps.get_db),
     form_data: OAuth2PasswordRequestForm = Depends(),
 ):
     user = crud_user.get_by_login(db, login=form_data.username)
@@ -49,15 +49,15 @@ def login(
 
 
 @router.get("/me", response_model=UserOut)
-def read_user_me(current_user: User = Depends(get_current_user)):
+def read_user_me(current_user: User = Depends(deps.get_current_user)):
     return current_user
 
 
 @router.put("/me", response_model=UserOut)
 def update_user_me(
     updates: UserUpdate,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user),
 ):
     return crud_user.update(db, user=current_user, updates=updates)
 
@@ -65,8 +65,8 @@ def update_user_me(
 @router.get("/{username}", response_model=UserProfile)
 def get_user_profile(
     username: str,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user),
 ):
     user = crud_user.get_by_username(db, username=username)
     if not user:
