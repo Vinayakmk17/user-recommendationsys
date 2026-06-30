@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 def get_recommendations(user_id: int, limit: int) -> list[dict] | None:
     try:
-        url = f"{settings.RECOMMENDER_URL}/recommend"
+        url = f"{settings.RECOMMENDER_URL}/recommend/reels"
         params = {"user_id": user_id, "limit": limit}
         response = httpx.get(
             url,
@@ -17,7 +17,8 @@ def get_recommendations(user_id: int, limit: int) -> list[dict] | None:
             timeout=settings.RECOMMENDER_TIMEOUT,
         )
         if response.status_code == 200:
-            return response.json()  # expects list of {"reel_id": int, "reason": str}
+            data = response.json()
+            return data.get("items", [])  # expects list of {"reel_id": int, "reason": str}
         else:
             logger.error(f"Recommender service returned status {response.status_code}")
             return None
