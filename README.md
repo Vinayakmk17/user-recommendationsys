@@ -111,8 +111,8 @@ jitproject1/
 ## Clone Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
-cd YOUR_REPOSITORY
+git clone https://github.com/Vinayakmk17/user-recommendationsy.git
+cd user-recommendationsy
 ```
 
 ---
@@ -264,37 +264,6 @@ uvicorn app.main:app --host 0.0.0.0 --port $PORT
 
 ---
 
-# 📸 Screenshots
-
-### Home Page
-
-(Add Screenshot)
-
----
-
-### Login
-
-(Add Screenshot)
-
----
-
-### Feed
-
-(Add Screenshot)
-
----
-
-### Profile
-
-(Add Screenshot)
-
----
-
-### Recommendation Page
-
-(Add Screenshot)
-
----
 
 # Future Improvements
 
